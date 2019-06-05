@@ -11,8 +11,8 @@ The lab environment needs three seperate machines, including
 - a DNS server 
 - the attacker’s machine
 
-              VM 1 (Attacker)     VM 2 (Victim DNS)             VM 3 (User)
-              10.0.2.6              10.172.x.14                 10.172.x.15                      
+              VM 1 (Attacker)     VM 2 (Victim DNS)            VM 3 (User)
+              10.0.2.6                10.0.2.15                  10.0.2.7                      
                 |                         |                         |
                 |_________________________|_________________________|
                 |                 Virtual Switch                    |
