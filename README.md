@@ -29,7 +29,8 @@ To compile type in the attacker's console:
  
 ## Instruction for running the attack
 Type in the attacker's machine:
-`sudo ./spoofdns ATTACKERS_IP VICTIM_DNS_IP`
+
+ `sudo ./spoofdns ATTACKERS_IP VICTIM_DNS_IP`
 
 Note: This sample program uses the IP addresses for my environment and for the request for the "example.com" domain, so you should adjust it for your case and recompile the code.
 
