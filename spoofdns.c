@@ -1,7 +1,6 @@
-//
-// The program is to spoofing tons of different queries to the victim.
-// Use wireshark to study the packets. However, it is not enough for 
-// the lab, please finish the response packet and complete the task.
+// Auth: Piergiorgio Ladisa
+// Spoofer of DNS Packets and Kaminsky attack
+// implementation.
 //
 // Compile command:
 // gcc -lpcap udp.c -o udp
@@ -36,15 +35,15 @@
 ******************************************************/
 struct ipheader {
 
-	unsigned char      iph_ihl:4, iph_ver:4;	// header length and version
+    unsigned char      iph_ihl:4, iph_ver:4;			// header length and version
     unsigned char      iph_tos;					// type of service
     unsigned short int iph_len;					// total length
     unsigned short int iph_ident;				// identification
     unsigned short int iph_offset;				// fragment offset field
     unsigned char      iph_ttl;					// time to live
-    unsigned char      iph_protocol;			// protocol
+    unsigned char      iph_protocol;				// protocol
     unsigned short int iph_chksum;				// checksum
-    unsigned int       iph_sourceip;			// source address
+    unsigned int       iph_sourceip;				// source address
     unsigned int       iph_destip;				// destination address
 };
 
@@ -57,7 +56,7 @@ struct ipheader {
 
 struct udpheader {
 	unsigned short int udph_srcport;			// source port
-    unsigned short int udph_destport;			// destination port
+    unsigned short int udph_destport;				// destination port
     unsigned short int udph_len;				// udp length
     unsigned short int udph_chksum;				// udp checksum
 }; // total udp header length: 8 bytes (=64 bits)
@@ -71,11 +70,11 @@ struct udpheader {
 ******************************************************/  
 struct dnsheader {
 	unsigned short int query_id;				// identification number
-	unsigned short int flags;					// flags: e.g. rd, tc, aa, opcode...
-	unsigned short int QDCOUNT;					// number of question entries
-	unsigned short int ANCOUNT;					// number of answer entries
-	unsigned short int NSCOUNT;					// number of authority entries
-	unsigned short int ARCOUNT;					// number of resource entries
+	unsigned short int flags;				// flags: e.g. rd, tc, aa, opcode...
+	unsigned short int QDCOUNT;				// number of question entries
+	unsigned short int ANCOUNT;				// number of answer entries
+	unsigned short int NSCOUNT;				// number of authority entries
+	unsigned short int ARCOUNT;				// number of resource entries
 };
 
 /* 
@@ -139,9 +138,9 @@ unsigned int checksum(uint16_t *usBuff, int isize){
 }
 
 //  calculate udp checksum
-//	|				|					||				|				|
-//	|	IP header 	|	UDP header 		||	DNS header 	| -- Payload -- |
-//	|				|					||				|				|
+//	|				|				||				|		|		|
+//	|	IP header 		|	UDP header 		||	DNS header 		| -- Payload -- |
+//	|				|				||				|		|		|
 uint16_t check_udp_sum(uint8_t *buffer, int len){
 	unsigned long sum=0;
 	struct ipheader *tempI=(struct ipheader *)(buffer);	// 
@@ -267,7 +266,7 @@ int dnsQueryBuilder(char *buffer_query,char *srcAddr, char *dstAddr){
 *		- dstAddr: destination IP address;
 *
 *	Return:
-*		0 if everything is ok
+*		DNS packet length
 */
 int dnsResponseBuilder(char *buffer_response, char *srcAddr, char *dstAddr){
 	
@@ -537,17 +536,8 @@ int main(int argc, char *argv[]){
 
 	udp_query->udph_chksum=check_udp_sum(buffer_query, packetLength_query-sizeof(struct ipheader));
 	udp_response->udph_chksum=check_udp_sum(buffer_response, packetLength_response-sizeof(struct ipheader));
+	
 	/*******************************************************************************8
-	Tips
-
-	the checksum is quite important to pass the checking integrity. You need 
-	to study the algorithem and what part should be taken into the calculation.
-
-	!!!!!If you change anything related to the calculation of the checksum, you need to re-
-	calculate it or the packet will be dropped.!!!!!
-
-	Here things became easier since I wrote the checksum function for you. You don't need
-	to spend your time writing the right checksum function.
 	Just for knowledge purpose,
 	remember the seconed parameter
 	for UDP checksum:
